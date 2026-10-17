@@ -72,13 +72,14 @@ input.code{font:inherit; font-weight:800; letter-spacing:.18em; text-transform:u
 
 /* Deco hands on the lobby */
 .deco{display:flex; flex-wrap:wrap; gap:12px; margin:18px 0 6px}
-.deco span{font-size:34px; width:60px; height:60px; display:grid; place-items:center;
+.deco > *{font-size:34px; width:60px; height:60px; display:grid; place-items:center; color:inherit; padding:0;
   border:2.5px solid var(--edge); border-radius:20px; box-shadow:5px 5px 0 var(--shadow)}
-.deco span:nth-child(1){background:var(--sun); transform:rotate(-4deg)}
-.deco span:nth-child(2){background:var(--mint); transform:rotate(3deg)}
-.deco span:nth-child(3){background:var(--pink); transform:rotate(-2deg)}
-.deco span:nth-child(4){background:var(--lilac); transform:rotate(4deg)}
-.deco span:nth-child(5){background:var(--sky); transform:rotate(-3deg)}
+.deco > button{appearance:none; font:inherit; font-size:34px; cursor:help; position:relative}
+.deco > :nth-child(1){background:var(--sun); transform:rotate(-4deg)}
+.deco > :nth-child(2){background:var(--mint); transform:rotate(3deg)}
+.deco > :nth-child(3){background:var(--pink); transform:rotate(-2deg)}
+.deco > :nth-child(4){background:var(--lilac); transform:rotate(4deg)}
+.deco > :nth-child(5){background:var(--sky); transform:rotate(-3deg)}
 
 /* Game */
 .topbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px}
@@ -115,28 +116,47 @@ input.code{font:inherit; font-weight:800; letter-spacing:.18em; text-transform:u
   transition:transform .12s, box-shadow .12s, opacity .2s}
 .move .e{font-size:clamp(42px,12vw,62px); line-height:1.1}
 .move .n{font-weight:800; font-size:18px}
-.move:nth-child(1){--c:var(--sun); transform:rotate(-2deg)}
-.move:nth-child(2){--c:var(--mint); transform:rotate(1.5deg)}
-.move:nth-child(3){--c:var(--pink); transform:rotate(-1deg)}
-.move:nth-child(4){--c:var(--lilac); transform:rotate(1deg)}
-.move:nth-child(5){--c:var(--sky); transform:rotate(-1.5deg)}
+.cell{position:relative; display:grid}
+.cell:nth-child(1) .move{--c:var(--sun); transform:rotate(-2deg)}
+.cell:nth-child(2) .move{--c:var(--mint); transform:rotate(1.5deg)}
+.cell:nth-child(3) .move{--c:var(--pink); transform:rotate(-1deg)}
+.cell:nth-child(4) .move{--c:var(--lilac); transform:rotate(1deg)}
+.cell:nth-child(5) .move{--c:var(--sky); transform:rotate(-1.5deg)}
 .moves.five{grid-template-columns:repeat(6,1fr)}
-.moves.five .move{grid-column:span 2}
-.moves.five .move:nth-child(4),.moves.five .move:nth-child(5){grid-column:span 3}
+.moves.five .cell{grid-column:span 2}
+.moves.five .cell:nth-child(4),.moves.five .cell:nth-child(5){grid-column:span 3}
+
+/* Kim kimi yener: bilgi balonu */
+.info-btn{position:absolute; top:-8px; right:-6px; z-index:2; width:30px; height:30px; border-radius:50%;
+  border:2px solid var(--edge); background:var(--card); color:var(--ink); font:inherit; font-weight:800; font-size:15px;
+  line-height:1; cursor:pointer; display:grid; place-items:center; padding:0}
+.tip{position:absolute; z-index:5; bottom:calc(100% + 12px); left:50%; transform:translateX(-50%);
+  width:max-content; max-width:min(250px, 80vw); text-align:left; font-size:14px; line-height:1.35; font-weight:400;
+  background:var(--ink); color:var(--paper); border-radius:12px; padding:10px 12px;
+  box-shadow:4px 4px 0 var(--shadow); opacity:0; visibility:hidden; transition:opacity .12s; pointer-events:none}
+.tip b{display:block; font-size:15px; margin-bottom:4px}
+.tip .lbl{display:block; font-weight:800; margin-top:6px}
+.cell:nth-child(1) .tip, .cell:nth-child(4) .tip{left:0; transform:none}
+.cell:nth-child(3) .tip, .cell:nth-child(5) .tip{left:auto; right:0; transform:none}
+.cell.open .tip, .cell:focus-within .tip, .deco > .open .tip, .deco > :focus-visible .tip{opacity:1; visibility:visible}
+@media (hover: hover){ .cell:hover .tip, .deco > button:hover .tip{opacity:1; visibility:visible} }
+.deco .tip{bottom:auto; top:calc(100% + 12px)}
+.deco > :nth-child(1) .tip, .deco > :nth-child(2) .tip{left:0; transform:none}
+.deco > :nth-child(4) .tip, .deco > :nth-child(5) .tip{left:auto; right:0; transform:none}
 .rules{margin-top:22px}
 .rules summary{cursor:pointer; font-weight:700}
 .rules ul{margin:10px 0 0; padding-left:1.2em}
 .rules li{margin:3px 0}
 .seek{text-align:center; padding-top:20px}
 .deco.searching{justify-content:center; margin:10px 0 26px}
-.deco.searching span{animation:bob 1.4s ease-in-out infinite}
-.deco.searching span:nth-child(2){animation-delay:.14s}
-.deco.searching span:nth-child(3){animation-delay:.28s}
-.deco.searching span:nth-child(4){animation-delay:.42s}
-.deco.searching span:nth-child(5){animation-delay:.56s}
+.deco.searching > *{animation:bob 1.4s ease-in-out infinite}
+.deco.searching > :nth-child(2){animation-delay:.14s}
+.deco.searching > :nth-child(3){animation-delay:.28s}
+.deco.searching > :nth-child(4){animation-delay:.42s}
+.deco.searching > :nth-child(5){animation-delay:.56s}
 @keyframes bob{0%,60%,100%{translate:0 0}30%{translate:0 -16px}}
 .seek-title{font-size:30px; margin-bottom:6px}
-@media (prefers-reduced-motion: reduce){ .deco.searching span{animation:none} }
+@media (prefers-reduced-motion: reduce){ .deco.searching > *{animation:none} }
 .move:hover:not(:disabled){transform:translate(-2px,-3px) rotate(0); box-shadow:8px 9px 0 var(--shadow)}
 .move:active:not(:disabled){transform:translate(4px,4px); box-shadow:2px 2px 0 var(--shadow)}
 .move.chosen{transform:translate(4px,4px) rotate(0); box-shadow:2px 2px 0 var(--shadow); outline:3px solid var(--ink); outline-offset:5px}
@@ -168,7 +188,7 @@ input.name{font:inherit; font-weight:600; border:2px solid var(--edge); border-r
   width:100%; max-width:18em; background:var(--paper); color:var(--ink)}
 .net{position:fixed; top:0; left:0; right:0; z-index:10; text-align:center; font-size:15px; font-weight:600;
   padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px; background:var(--pink); color:var(--on-accent);
-  transform:translateY(-100%); transition:transform .2s}
+  transform:translateY(calc(-100% - 6px)); transition:transform .2s}
 .net.show{transform:none}
 .note{text-align:center; font-size:15px; color:var(--muted); margin:-12px 0 18px}
 </style>
@@ -190,6 +210,27 @@ const RULES = {
   "kertenkele>kagit":"Kertenkele kağıdı yer", "kagit>spock":"Kağıt Spock’u çürütür", "spock>tas":"Spock taşı buharlaştırır", "tas>makas":"Taş makası kırar"
 };
 const FIRST_TO = { 3:2, 5:3, 7:4 };
+function tipHtml(k, v){
+  const moves = VARIANTS[v].moves;
+  const wins = moves.filter(o => RULES[k + ">" + o]), loses = moves.filter(o => RULES[o + ">" + k]);
+  return `<b>${MOVES[k].e} ${MOVES[k].n}</b>
+    <span class="lbl">Yener: ${wins.map(o => MOVES[o].e).join(" ")}</span>${wins.map(o => esc(RULES[k + ">" + o])).join("<br>")}
+    <span class="lbl">Yenilir: ${loses.map(o => MOVES[o].e).join(" ")}</span>${loses.map(o => esc(RULES[o + ">" + k])).join("<br>")}`;
+}
+let openTip = null;
+function bindTips(){
+  app.querySelectorAll("[data-tip]").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    openTip = openTip === b.dataset.tip ? null : b.dataset.tip;
+    applyTips();
+  });
+  applyTips();
+}
+function applyTips(){
+  app.querySelectorAll("[data-tipfor]").forEach(el => el.classList.toggle("open", el.dataset.tipfor === openTip));
+}
+document.addEventListener("click", () => { if (openTip) { openTip = null; applyTips(); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && openTip) { openTip = null; applyTips(); } });
 const ruleText = (mine, theirs, w) => w === 1 ? RULES[mine + ">" + theirs] : w === -1 ? RULES[theirs + ">" + mine] : "";
 
 const app = document.getElementById("app");
@@ -306,7 +347,9 @@ function renderLobby(){
   app.innerHTML = `
     <h1>Taş Kağıt Makas</h1>
     <p class="muted">Rastgele bir rakiple eşleş ya da arkadaşına davet bağlantısı gönder. Hamleler ikiniz de seçene kadar sunucuda saklı kalır.</p>
-    <div class="deco" aria-hidden="true">${VARIANTS[variant].moves.map(k => `<span>${MOVES[k].e}</span>`).join("")}</div>
+    <div class="deco" role="group" aria-label="Hamleler: kim kimi yener">${VARIANTS[variant].moves.map(k =>
+      `<button data-tip="d-${k}" data-tipfor="d-${k}" aria-label="${MOVES[k].n}: kimi yener, kime yenilir"><span aria-hidden="true">${MOVES[k].e}</span><span class="tip" role="tooltip">${tipHtml(k, variant)}</span></button>`).join("")}</div>
+    <p class="muted" style="font-size:15px; margin-top:12px">Bir simgenin üstüne gel ya da dokun: kimi yendiğini görürsün.</p>
     <div class="panel">
       <h2>Takma adın</h2>
       <input class="name" id="name" maxlength="20" placeholder="Rakibin bu adı görecek" value="${esc(myName)}" aria-label="Takma adın">
@@ -334,6 +377,7 @@ function renderLobby(){
         <button class="btn" id="join">Katıl</button>
       </div>
     </div>`;
+  bindTips();
   const nameEl = document.getElementById("name");
   nameEl.onchange = () => saveName(nameEl.value);
   app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { variant = b.dataset.v; lsSet("tkm-variant", variant); renderLobby(); });
@@ -421,9 +465,13 @@ function renderGame(){
   const movesHtml = `
     <div class="moves ${moveSet.length === 5 ? "five" : ""}" role="group" aria-label="Hamleni seç">
       ${moveSet.map(k => `
-        <button class="move ${myMove === k ? "chosen" : ""}" data-m="${k}" ${(!canPlay || myMove) ? "disabled" : ""} aria-pressed="${myMove === k}">
-          <span class="e" aria-hidden="true">${MOVES[k].e}</span><span class="n">${MOVES[k].n}</span>
-        </button>`).join("")}
+        <div class="cell" data-tipfor="m-${k}">
+          <button class="move ${myMove === k ? "chosen" : ""}" data-m="${k}" ${(!canPlay || myMove) ? "disabled" : ""} aria-pressed="${myMove === k}" aria-describedby="tip-${k}">
+            <span class="e" aria-hidden="true">${MOVES[k].e}</span><span class="n">${MOVES[k].n}</span>
+          </button>
+          <button class="info-btn" data-tip="m-${k}" aria-label="${MOVES[k].n} kimi yener?">i</button>
+          <span class="tip" role="tooltip" id="tip-${k}">${tipHtml(k, g.variant)}</span>
+        </div>`).join("")}
     </div>`;
 
   let actions = "";
@@ -481,6 +529,7 @@ function renderGame(){
     ${histHtml}`;
 
   app.querySelectorAll("[data-m]").forEach(b => b.onclick = () => pick(b.dataset.m));
+  bindTips();
   document.getElementById("lobby").onclick = leave;
   const on = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
   on("lobby2", leave);
