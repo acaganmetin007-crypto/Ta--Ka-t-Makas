@@ -1,0 +1,16 @@
+{
+  "name": "tas-kagit-makas",
+  "version": "1.0.0",
+  "description": "Çevrimiçi, iki kişilik Taş Kağıt Makas (ve Kertenkele-Spock) oyunu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "8.18.0"
+  },
+  "license": "MIT"
+}
