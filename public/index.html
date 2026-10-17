@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Taş Kağıt Makas</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF0F7; --ink:#1B2559; --muted:#5A6390; --card:#FFFFFF; --line:#CBD0E4;
+  --edge:#1B2559; --shadow:#1B2559; --on-accent:#1B2559;
+  --sun:#FFC93C; --mint:#3CC4B2; --pink:#FF6A8E; --lilac:#B4A6FF; --sky:#7CCBFF; --good:#1E8F6E; --bad:#D23A5F;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12173A; --ink:#ECEEF8; --muted:#A3AACB; --card:#1C2352; --line:#323B72;
+    --edge:#0A0E26; --shadow:#05081C; --good:#5FD6AE; --bad:#FF8AA6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12173A; --ink:#ECEEF8; --muted:#A3AACB; --card:#1C2352; --line:#323B72;
+  --edge:#0A0E26; --shadow:#05081C; --good:#5FD6AE; --bad:#FF8AA6;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Bricolage Grotesque", ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size:17px; line-height:1.5;
+}
+#app{max-width:680px; margin:0 auto; padding:28px 20px 64px}
+h1{font-size:clamp(40px,10vw,64px); line-height:.95; font-weight:800; letter-spacing:-.02em; margin:0 0 14px}
+h2{font-size:21px; font-weight:800; margin:0 0 12px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--pink); outline-offset:3px}
+
+.panel{background:var(--card); border:1.5px solid var(--line); border-radius:18px; padding:20px; margin-top:16px}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+
+.btn{appearance:none; border:2px solid var(--edge); background:var(--card); color:var(--ink);
+  border-radius:12px; padding:10px 18px; font-weight:700; cursor:pointer; box-shadow:3px 3px 0 var(--shadow);
+  transition:transform .1s, box-shadow .1s}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--shadow)}
+.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--shadow)}
+.btn.primary{background:var(--sun); color:var(--on-accent)}
+.btn.ghost{border-color:transparent; box-shadow:none; background:transparent; text-decoration:underline; padding:10px 6px}
+.btn:disabled{opacity:.5; cursor:default; transform:none}
+
+.seg{display:inline-flex; border:2px solid var(--edge); border-radius:12px; overflow:hidden; margin-bottom:6px}
+.seg button{appearance:none; border:0; background:transparent; padding:9px 16px; cursor:pointer; font-weight:600}
+.seg button+button{border-left:2px solid var(--edge)}
+.seg button[aria-checked="true"]{background:var(--ink); color:var(--paper)}
+
+input.code{font:inherit; font-weight:800; letter-spacing:.18em; text-transform:uppercase;
+  border:2px solid var(--edge); border-radius:12px; padding:9px 14px; width:9.5em; background:var(--paper); color:var(--ink)}
+
+.open-list{list-style:none; margin:0; padding:0}
+.open-list li{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--line)}
+.open-list li:first-child{border-top:0}
+.open-list .who{font-weight:600}
+
+/* Deco hands on the lobby */
+.deco{display:flex; flex-wrap:wrap; gap:12px; margin:18px 0 6px}
+.deco span{font-size:34px; width:60px; height:60px; display:grid; place-items:center;
+  border:2.5px solid var(--edge); border-radius:20px; box-shadow:5px 5px 0 var(--shadow)}
+.deco span:nth-child(1){background:var(--sun); transform:rotate(-4deg)}
+.deco span:nth-child(2){background:var(--mint); transform:rotate(3deg)}
+.deco span:nth-child(3){background:var(--pink); transform:rotate(-2deg)}
+.deco span:nth-child(4){background:var(--lilac); transform:rotate(4deg)}
+.deco span:nth-child(5){background:var(--sky); transform:rotate(-3deg)}
+
+/* Game */
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px}
+.codechip{font-weight:800; letter-spacing:.14em}
+.score{display:grid; grid-template-columns:1fr auto 1fr; align-items:end; gap:12px}
+.side{min-width:0}
+.side.right{text-align:right}
+.side .name{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.side .num{font-size:60px; font-weight:800; line-height:1}
+.pips{display:flex; gap:6px; margin-top:6px}
+.side.right .pips{justify-content:flex-end}
+.pip{width:12px; height:12px; border-radius:50%; border:2px solid var(--ink)}
+.pip.on{background:var(--ink)}
+.vs{font-weight:800; color:var(--muted); padding-bottom:10px}
+.rule{font-size:15px; color:var(--muted); margin-top:10px}
+
+.arena{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; text-align:center;
+  margin:22px 0 6px; min-height:150px}
+.hand{font-size:clamp(72px,20vw,110px); line-height:1; display:inline-block}
+.hand-wrap.left .hand{transform:scaleX(-1)}
+.hand-wrap.pump{animation:pump .34s ease-in-out 3}
+@keyframes pump{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+.hand-wrap.pop{animation:pop .25s ease-out}
+@keyframes pop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.hand.wait{opacity:.25}
+.mid{font-weight:800; color:var(--muted); padding:0 8px}
+.status{text-align:center; font-size:20px; font-weight:700; min-height:1.5em; margin:4px 0 20px}
+.status.good{color:var(--good)} .status.bad{color:var(--bad)}
+
+.moves{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(10px,3vw,18px)}
+.move{appearance:none; border:2.5px solid var(--edge); background:var(--c); color:var(--on-accent);
+  border-radius:22px; padding:16px 6px 12px; box-shadow:6px 6px 0 var(--shadow); cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  transition:transform .12s, box-shadow .12s, opacity .2s}
+.move .e{font-size:clamp(42px,12vw,62px); line-height:1.1}
+.move .n{font-weight:800; font-size:18px}
+.move:nth-child(1){--c:var(--sun); transform:rotate(-2deg)}
+.move:nth-child(2){--c:var(--mint); transform:rotate(1.5deg)}
+.move:nth-child(3){--c:var(--pink); transform:rotate(-1deg)}
+.move:nth-child(4){--c:var(--lilac); transform:rotate(1deg)}
+.move:nth-child(5){--c:var(--sky); transform:rotate(-1.5deg)}
+.moves.five{grid-template-columns:repeat(6,1fr)}
+.moves.five .move{grid-column:span 2}
+.moves.five .move:nth-child(4),.moves.five .move:nth-child(5){grid-column:span 3}
+.rules{margin-top:22px}
+.rules summary{cursor:pointer; font-weight:700}
+.rules ul{margin:10px 0 0; padding-left:1.2em}
+.rules li{margin:3px 0}
+.seek{text-align:center; padding-top:20px}
+.deco.searching{justify-content:center; margin:10px 0 26px}
+.deco.searching span{animation:bob 1.4s ease-in-out infinite}
+.deco.searching span:nth-child(2){animation-delay:.14s}
+.deco.searching span:nth-child(3){animation-delay:.28s}
+.deco.searching span:nth-child(4){animation-delay:.42s}
+.deco.searching span:nth-child(5){animation-delay:.56s}
+@keyframes bob{0%,60%,100%{translate:0 0}30%{translate:0 -16px}}
+.seek-title{font-size:30px; margin-bottom:6px}
+@media (prefers-reduced-motion: reduce){ .deco.searching span{animation:none} }
+.move:hover:not(:disabled){transform:translate(-2px,-3px) rotate(0); box-shadow:8px 9px 0 var(--shadow)}
+.move:active:not(:disabled){transform:translate(4px,4px); box-shadow:2px 2px 0 var(--shadow)}
+.move.chosen{transform:translate(4px,4px) rotate(0); box-shadow:2px 2px 0 var(--shadow); outline:3px solid var(--ink); outline-offset:5px}
+.move:disabled{cursor:default}
+.move:disabled:not(.chosen){opacity:.35}
+
+.history{list-style:none; padding:0; margin:0}
+.history li{display:grid; grid-template-columns:3.2em 1fr auto; gap:10px; align-items:center; padding:8px 0; border-top:1px solid var(--line)}
+.history li:first-child{border-top:0}
+.history .r{color:var(--muted); font-size:15px}
+.history .h{font-size:24px}
+.history .why{display:block; font-size:14px; color:var(--muted); line-height:1.3}
+.history .res{font-weight:700; font-size:15px}
+.history .res.good{color:var(--good)} .history .res.bad{color:var(--bad)}
+
+.banner{text-align:center; padding:8px 0 4px}
+.banner .big{font-size:clamp(34px,9vw,52px); font-weight:800; line-height:1.05; margin-bottom:12px}
+
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
+  background:var(--ink); color:var(--paper); padding:12px 18px; border-radius:12px; max-width:min(92vw,520px);
+  font-size:15px; opacity:0; pointer-events:none; transition:opacity .2s}
+.toast.show{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  .hand-wrap.pump,.hand-wrap.pop{animation:none}
+  .move,.btn{transition:none}
+}
+input.name{font:inherit; font-weight:600; border:2px solid var(--edge); border-radius:12px; padding:9px 14px;
+  width:100%; max-width:18em; background:var(--paper); color:var(--ink)}
+.net{position:fixed; top:0; left:0; right:0; z-index:10; text-align:center; font-size:15px; font-weight:600;
+  padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px; background:var(--pink); color:var(--on-accent);
+  transform:translateY(-100%); transition:transform .2s}
+.net.show{transform:none}
+.note{text-align:center; font-size:15px; color:var(--muted); margin:-12px 0 18px}
+</style>
+</head>
+<body>
+<div class="net" id="net" role="status">Bağlantı koptu, yeniden bağlanılıyor…</div>
+<main id="app"><p class="muted">Sunucuya bağlanılıyor…</p></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const MOVES = { tas:{e:"✊", n:"Taş"}, kagit:{e:"✋", n:"Kağıt"}, makas:{e:"✌️", n:"Makas"}, kertenkele:{e:"🦎", n:"Kertenkele"}, spock:{e:"🖖", n:"Spock"} };
+const VARIANTS = {
+  klasik:{ n:"Klasik", moves:["tas","kagit","makas"] },
+  spock:{ n:"Kertenkele-Spock", moves:["tas","kagit","makas","kertenkele","spock"] }
+};
+const RULES = {
+  "makas>kagit":"Makas kağıdı keser", "kagit>tas":"Kağıt taşı sarar", "tas>kertenkele":"Taş kertenkeleyi ezer",
+  "kertenkele>spock":"Kertenkele Spock’u zehirler", "spock>makas":"Spock makası kırar", "makas>kertenkele":"Makas kertenkelenin kafasını keser",
+  "kertenkele>kagit":"Kertenkele kağıdı yer", "kagit>spock":"Kağıt Spock’u çürütür", "spock>tas":"Spock taşı buharlaştırır", "tas>makas":"Taş makası kırar"
+};
+const FIRST_TO = { 3:2, 5:3, 7:4 };
+const ruleText = (mine, theirs, w) => w === 1 ? RULES[mine + ">" + theirs] : w === -1 ? RULES[theirs + ">" + mine] : "";
+
+const app = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 3800);
+}
+
+/* ---------- kimlik ve ayarlar ---------- */
+let myId = lsGet("tkm-id");
+if (!myId || !/^[A-Za-z0-9_-]{16,64}$/.test(myId)) {
+  const a = new Uint8Array(16); crypto.getRandomValues(a);
+  myId = [...a].map(x => x.toString(16).padStart(2,"0")).join("");
+  lsSet("tkm-id", myId);
+}
+let myName = lsGet("tkm-name") || "";
+let variant = VARIANTS[lsGet("tkm-variant")] ? lsGet("tkm-variant") : "spock";
+let bestOf = FIRST_TO[+lsGet("tkm-bestof")] ? +lsGet("tkm-bestof") : 3;
+let inviteCode = new URLSearchParams(location.search).get("oyun");
+
+/* ---------- bağlantı ---------- */
+let ws = null, connected = false, retry = 0;
+let view = "connecting", st = null, stats = null, seekInfo = null;
+let animating = false, pendingMove = null;
+
+function sendMsg(m){ if (ws && ws.readyState === 1) ws.send(JSON.stringify(m)); }
+function connect(){
+  const proto = location.protocol === "https:" ? "wss" : "ws";
+  ws = new WebSocket(`${proto}://${location.host}/ws`);
+  ws.onopen = () => {
+    connected = true; retry = 0; showNet();
+    sendMsg({ type:"hello", id:myId, name:myName });
+    if (view === "seeking" && seekInfo) sendMsg({ type:"quick", variant:seekInfo.variant, bestOf:seekInfo.bestOf });
+  };
+  ws.onmessage = e => { let m; try { m = JSON.parse(e.data); } catch(err){ return; } handle(m); };
+  ws.onclose = e => {
+    connected = false;
+    if (e.code === 4000) { view = "replaced"; render(); return; }
+    showNet();
+    setTimeout(connect, Math.min(10000, 600 * 2 ** retry++));
+  };
+}
+function showNet(){ document.getElementById("net").classList.toggle("show", !connected && view !== "connecting" && view !== "replaced"); }
+
+function handle(m){
+  if (m.type === "lobby") {
+    if (view === "seeking" && seekInfo) return;      // yeniden bağlanırken aramaya devam ediyoruz
+    st = null; pendingMove = null; view = "lobby"; render();
+    if (inviteCode) {
+      sendMsg({ type:"join", code:inviteCode });
+      inviteCode = null;
+      history.replaceState(null, "", location.pathname);
+    }
+  } else if (m.type === "seeking") {
+    if (!seekInfo) seekInfo = { variant:m.variant, bestOf:m.bestOf, since:Date.now() };
+    view = "seeking"; render();
+  } else if (m.type === "state") {
+    const prev = st;
+    if (view === "seeking" || (prev && prev.code !== m.code)) toast(m.isPrivate ? "Oyuna katıldın." : "Rakip bulundu. İyi şanslar!");
+    else if (prev && !prev.opp && m.opp) toast("Rakibin geldi. Oyun başlıyor!");
+    if (prev && prev.code === m.code && prev.match === m.match && m.history.length > prev.history.length && !reduceMotion()) {
+      animating = true;
+      setTimeout(() => { animating = false; render(); }, 1100);
+    }
+    if (m.me.choice || !prev || m.history.length !== prev.history.length || m.match !== prev.match) pendingMove = null;
+    st = m; seekInfo = null; view = "game"; render();
+  } else if (m.type === "stats") {
+    stats = m; updateStats();
+  } else if (m.type === "error") {
+    toast(m.msg);
+  }
+}
+
+/* ---------- eylemler ---------- */
+function saveName(v){
+  myName = v.trim().slice(0, 20); lsSet("tkm-name", myName);
+  sendMsg({ type:"setName", name:myName });
+}
+function startSeeking(){
+  seekInfo = { variant, bestOf, since:Date.now() };
+  view = "seeking"; render();
+  sendMsg({ type:"quick", variant, bestOf });
+}
+function cancelSeeking(){ seekInfo = null; view = "lobby"; render(); sendMsg({ type:"cancel" }); }
+function pick(m){
+  if (!st || !st.opp || st.finished || animating || st.me.choice || pendingMove) return;
+  pendingMove = m; render();
+  sendMsg({ type:"move", m });
+}
+function leave(){ sendMsg({ type:"leave" }); }
+function inviteLink(){ return `${location.origin}${location.pathname}?oyun=${st.code}`; }
+async function copyInvite(){
+  try { await navigator.clipboard.writeText(inviteLink()); toast("Davet bağlantısı kopyalandı."); }
+  catch(e){ toast("Bağlantıyı elle paylaş: " + inviteLink()); }
+}
+
+/* ---------- çizim ---------- */
+function render(){
+  showNet();
+  if (view === "connecting") app.innerHTML = `<p class="muted">Sunucuya bağlanılıyor…</p>`;
+  else if (view === "replaced") app.innerHTML = `<h1>Taş Kağıt Makas</h1><div class="panel"><h2>Oyun başka bir sekmede açık</h2><p>Aynı anda tek sekmeden oynayabilirsin. Buradan devam etmek için sayfayı yenile.</p></div>`;
+  else if (view === "lobby") renderLobby();
+  else if (view === "seeking") renderSeeking();
+  else if (view === "game") renderGame();
+}
+
+function renderLobby(){
+  app.innerHTML = `
+    <h1>Taş Kağıt Makas</h1>
+    <p class="muted">Rastgele bir rakiple eşleş ya da arkadaşına davet bağlantısı gönder. Hamleler ikiniz de seçene kadar sunucuda saklı kalır.</p>
+    <div class="deco" aria-hidden="true">${VARIANTS[variant].moves.map(k => `<span>${MOVES[k].e}</span>`).join("")}</div>
+    <div class="panel">
+      <h2>Takma adın</h2>
+      <input class="name" id="name" maxlength="20" placeholder="Rakibin bu adı görecek" value="${esc(myName)}" aria-label="Takma adın">
+    </div>
+    <div class="panel">
+      <h2>Oyun ayarları</h2>
+      <div class="seg" role="radiogroup" aria-label="Oyun türü">
+        ${Object.entries(VARIANTS).map(([k,v]) => `<button role="radio" aria-checked="${variant===k}" data-v="${k}">${v.n}</button>`).join("")}
+      </div>
+      <p class="muted" style="font-size:15px">${variant === "spock" ? "Beş hamle: taş, kağıt, makas, kertenkele ve Spock. Her hamle ikisini yener, ikisine yenilir." : "Üç hamle: taş, kağıt, makas."}</p>
+      <div class="seg" role="radiogroup" aria-label="Kaç el">
+        ${[3,5,7].map(n => `<button role="radio" aria-checked="${bestOf===n}" data-bo="${n}">${n} el</button>`).join("")}
+      </div>
+      <p class="muted" style="font-size:15px">${FIRST_TO[bestOf]} eli ilk kazanan maçı alır.</p>
+      <div class="row" style="margin-top:14px">
+        <button class="btn primary" id="seek">Rastgele rakip bul</button>
+        <button class="btn" id="create">Arkadaşınla oyna</button>
+      </div>
+      <p class="muted" id="online" style="font-size:15px; margin:12px 0 0"></p>
+    </div>
+    <div class="panel">
+      <h2>Kodla katıl</h2>
+      <div class="row">
+        <input class="code" id="code" maxlength="8" placeholder="KOD" autocomplete="off" aria-label="Oyun kodu">
+        <button class="btn" id="join">Katıl</button>
+      </div>
+    </div>`;
+  const nameEl = document.getElementById("name");
+  nameEl.onchange = () => saveName(nameEl.value);
+  app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { variant = b.dataset.v; lsSet("tkm-variant", variant); renderLobby(); });
+  app.querySelectorAll("[data-bo]").forEach(b => b.onclick = () => { bestOf = +b.dataset.bo; lsSet("tkm-bestof", bestOf); renderLobby(); });
+  document.getElementById("seek").onclick = () => { saveName(nameEl.value); startSeeking(); };
+  document.getElementById("create").onclick = () => { saveName(nameEl.value); sendMsg({ type:"create", variant, bestOf }); };
+  const codeEl = document.getElementById("code");
+  const join = () => { const c = codeEl.value.trim().toUpperCase(); if (!/^[A-Z0-9]{4,8}$/.test(c)) { toast("Kod 5 karakterli olmalı, ör. K7MXQ."); return; } saveName(nameEl.value); sendMsg({ type:"join", code:c }); };
+  document.getElementById("join").onclick = join;
+  codeEl.onkeydown = e => { if (e.key === "Enter") join(); };
+  updateStats();
+}
+
+function updateStats(){
+  if (!stats) return;
+  const others = Math.max(0, stats.online - 1);
+  const el = document.getElementById("online");
+  if (el) {
+    const s = stats.seeking[variant] || 0;
+    el.textContent = others === 0 ? "Şu an başka çevrimiçi oyuncu yok. Rakip ararsan biri geldiğinde otomatik eşleşirsin."
+      : s > 0 ? `Şu an ${others} kişi daha çevrimiçi, ${s} kişi ${VARIANTS[variant].n} için rakip arıyor.`
+      : `Şu an ${others} kişi daha çevrimiçi.`;
+  }
+  const info = document.getElementById("seekinfo");
+  if (info && seekInfo) {
+    info.textContent = others === 0 ? "Şu an başka çevrimiçi oyuncu yok. Biri gelip rakip aradığında otomatik eşleşeceksiniz."
+      : `Şu an ${others} kişi daha çevrimiçi. Aynı oyun türünde rakip arayan biri çıktığında eşleşeceksiniz.`;
+  }
+}
+
+let seekTick = null;
+function renderSeeking(){
+  const s = seekInfo; if (!s) return;
+  app.innerHTML = `
+    <div class="topbar"><button class="btn ghost" id="cancel">Vazgeç</button><span></span></div>
+    <div class="seek">
+      <div class="deco searching" aria-hidden="true">${VARIANTS[s.variant].moves.map(k => `<span>${MOVES[k].e}</span>`).join("")}</div>
+      <h2 class="seek-title" role="status">Rakip aranıyor…</h2>
+      <p class="muted">${esc(VARIANTS[s.variant].n)}, ${s.bestOf} el. Bekleme süresi <span id="elapsed">0 sn</span></p>
+      <p class="muted" id="seekinfo"></p>
+    </div>`;
+  document.getElementById("cancel").onclick = cancelSeeking;
+  clearInterval(seekTick);
+  const tick = () => {
+    const el = document.getElementById("elapsed");
+    if (!el || !seekInfo) { clearInterval(seekTick); return; }
+    el.textContent = Math.floor((Date.now() - seekInfo.since) / 1000) + " sn";
+  };
+  tick(); seekTick = setInterval(tick, 1000);
+  updateStats();
+}
+
+function renderGame(){
+  const g = st, moveSet = VARIANTS[g.variant].moves;
+  const last = g.history[g.history.length - 1];
+  const myScore = g.me.score, oppScore = g.opp ? g.opp.score : 0;
+  const pips = n => Array.from({ length:g.target }, (_, i) => `<span class="pip ${i < n ? "on" : ""}"></span>`).join("");
+  const myMove = g.me.choice || pendingMove;
+
+  let handL = "✊", handR = "✊", cls = "", status = "", tone = "", note = "";
+  if (last && !animating) { handL = MOVES[last.mine].e; handR = MOVES[last.theirs].e; cls = "pop"; }
+  if (animating) cls = "pump";
+  const wait = !animating && !last;
+  const rt = last ? ruleText(last.mine, last.theirs, last.w) : "";
+  const lastTxt = !last ? "" : (rt ? rt + ". " : "") + (last.w === 0 ? "Berabere. " : last.w > 0 ? "Bu eli aldın. " : "Bu eli rakibin aldı. ");
+
+  if (!g.opp) {
+    status = "Rakibin bekleniyor. Davet bağlantısını gönder.";
+  } else if (animating) {
+    status = "Taş… kağıt… makas!";
+  } else if (g.finished) {
+    const won = myScore > oppScore;
+    status = won ? "Maçı kazandın!" : "Maçı rakibin aldı."; tone = won ? "good" : "bad";
+  } else if (g.opp.left) {
+    status = "Rakibin oyundan ayrıldı."; tone = "bad";
+  } else {
+    if (myMove) status = "Seçimin kilitlendi. Rakibin düşünüyor…";
+    else if (g.opp.chose) status = lastTxt + "Rakibin seçti, sıra sende.";
+    else status = lastTxt + (g.history.length ? `${g.history.length + 1}. el: hamleni seç.` : "Hamleni seç.");
+    if (last && !myMove) tone = last.w > 0 ? "good" : last.w < 0 ? "bad" : "";
+  }
+  if (g.opp && !g.opp.online && !g.opp.left) note = "Rakibinin bağlantısı koptu. İki dakika içinde dönerse oyun kaldığı yerden sürer.";
+
+  const canPlay = g.opp && !g.opp.left && !g.finished && !animating;
+  const movesHtml = `
+    <div class="moves ${moveSet.length === 5 ? "five" : ""}" role="group" aria-label="Hamleni seç">
+      ${moveSet.map(k => `
+        <button class="move ${myMove === k ? "chosen" : ""}" data-m="${k}" ${(!canPlay || myMove) ? "disabled" : ""} aria-pressed="${myMove === k}">
+          <span class="e" aria-hidden="true">${MOVES[k].e}</span><span class="n">${MOVES[k].n}</span>
+        </button>`).join("")}
+    </div>`;
+
+  let actions = "";
+  if (!g.opp) {
+    actions = `<div class="panel" style="text-align:center">
+      <p>Arkadaşın bu bağlantıyı açınca oyun başlar.</p>
+      <p style="font-weight:700; word-break:break-all">${esc(inviteLink())}</p>
+      <button class="btn primary" id="invite">Bağlantıyı kopyala</button></div>`;
+  } else if (g.opp.left && !g.finished) {
+    actions = `<div class="banner"><div class="row" style="justify-content:center">
+      <button class="btn primary" id="newopp">Yeni rakip bul</button><button class="btn" id="lobby2">Lobiye dön</button></div></div>`;
+  } else if (g.finished && !animating) {
+    const rmLabel = g.me.rematch ? "Rövanş isteğin gönderildi" : g.opp.rematch ? "Rövanşı kabul et" : "Rövanş";
+    actions = `<div class="banner">
+      ${g.opp.rematch && !g.me.rematch ? `<p>Rakibin rövanş istiyor.</p>` : ""}
+      <div class="row" style="justify-content:center">
+        ${g.opp.left ? `<button class="btn primary" id="newopp">Yeni rakip bul</button>` : `<button class="btn primary" id="rematch" ${g.me.rematch ? "disabled" : ""}>${rmLabel}</button>`}
+        <button class="btn" id="lobby2">Lobiye dön</button>
+      </div></div>`;
+  }
+
+  const histHtml = g.history.length ? `
+    <div class="panel"><h2>Eller</h2><ul class="history">
+      ${g.history.slice().reverse().map(x => {
+        const why = ruleText(x.mine, x.theirs, x.w);
+        return `<li><span class="r">${x.r}. el</span>
+          <span class="h" aria-label="${MOVES[x.mine].n} karşı ${MOVES[x.theirs].n}">${MOVES[x.mine].e} <span class="muted" style="font-size:15px">–</span> ${MOVES[x.theirs].e}${why ? `<span class="why">${esc(why)}</span>` : ""}</span>
+          <span class="res ${x.w > 0 ? "good" : x.w < 0 ? "bad" : ""}">${x.w === 0 ? "Berabere" : x.w > 0 ? "Kazandın" : "Kaybettin"}</span></li>`;
+      }).join("")}
+    </ul></div>` : "";
+
+  app.innerHTML = `
+    <div class="topbar">
+      <button class="btn ghost" id="lobby">Lobi</button>
+      <span>Oyun kodu <span class="codechip">${esc(g.code)}</span></span>
+    </div>
+    <div class="panel">
+      <div class="score">
+        <div class="side"><div class="name">${esc(g.me.name)} (sen)</div><div class="num">${myScore}</div><div class="pips">${pips(myScore)}</div></div>
+        <div class="vs">${g.match > 1 ? g.match + ". maç" : ""}</div>
+        <div class="side right"><div class="name">${g.opp ? esc(g.opp.name) : "Rakip bekleniyor"}</div><div class="num">${oppScore}</div><div class="pips">${pips(oppScore)}</div></div>
+      </div>
+      <div class="rule">${esc(VARIANTS[g.variant].n)}, ${g.bestOf} el. ${g.target} eli ilk kazanan maçı alır.</div>
+    </div>
+    <div class="arena" aria-hidden="true">
+      <div class="hand-wrap left ${cls}"><span class="hand ${wait ? "wait" : ""}">${animating ? "✊" : handL}</span></div>
+      <div class="mid">karşı</div>
+      <div class="hand-wrap ${cls}"><span class="hand ${wait ? "wait" : ""}">${animating ? "✊" : handR}</span></div>
+    </div>
+    <div class="status ${tone}" role="status">${esc(status)}</div>
+    ${note ? `<p class="note">${esc(note)}</p>` : ""}
+    ${actions}
+    ${g.opp && !g.finished && !g.opp.left ? movesHtml : ""}
+    ${g.variant === "spock" ? `<details class="rules"><summary>Kim kimi yener?</summary><ul>${Object.values(RULES).map(t => `<li>${esc(t)}</li>`).join("")}</ul></details>` : ""}
+    ${histHtml}`;
+
+  app.querySelectorAll("[data-m]").forEach(b => b.onclick = () => pick(b.dataset.m));
+  document.getElementById("lobby").onclick = leave;
+  const on = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
+  on("lobby2", leave);
+  on("invite", copyInvite);
+  on("rematch", () => sendMsg({ type:"rematch" }));
+  on("newopp", () => { variant = g.variant; bestOf = g.bestOf; startSeeking(); });
+}
+
+render();
+connect();
+</script>
+</body>
+</html>
